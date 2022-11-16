@@ -1,5 +1,6 @@
 package com.service.impl;
 
+import com.dto.UserBaseDTO;
 import com.dto.UserDTO;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO create(UserDTO dto) throws JsonProcessingException, ExecutionException, InterruptedException {
+    public List<UserDTO> create(UserBaseDTO dto) throws JsonProcessingException, ExecutionException, InterruptedException {
         String jsonDto = objectMapper.writeValueAsString(dto);
         ProducerRecord<String, Object> record = new ProducerRecord<>("create_user", jsonDto);
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
@@ -68,12 +69,12 @@ public class UserServiceImpl implements UserService {
 
         String json = (String) consumerRecord.value();
 
-        UserDTO userDTO = objectMapper.readValue(json, new TypeReference<UserDTO>(){});
-        return userDTO;
+        List<UserDTO> userDTOList = objectMapper.readValue(json, new TypeReference<List<UserDTO>>(){});
+        return userDTOList;
     }
 
     @Override
-    public UserDTO update(UserDTO dto) throws ExecutionException, InterruptedException, JsonProcessingException {
+    public List<UserDTO> update(UserDTO dto) throws ExecutionException, InterruptedException, JsonProcessingException {
         String jsonDto = objectMapper.writeValueAsString(dto);
         ProducerRecord<String, Object> record = new ProducerRecord<>("update_user", jsonDto);
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
@@ -83,13 +84,13 @@ public class UserServiceImpl implements UserService {
 
         String json = (String) consumerRecord.value();
 
-        UserDTO userDTO = objectMapper.readValue(json, new TypeReference<UserDTO>(){});
-        return userDTO;
+        List<UserDTO> userDTOList = objectMapper.readValue(json, new TypeReference<List<UserDTO>>(){});
+        return userDTOList;
     }
 
     @Override
     public List<UserDTO> findUserByEmail(String email) throws JsonProcessingException, ExecutionException, InterruptedException {
-        ProducerRecord<String, Object> record = new ProducerRecord<>("get_list_users", email);
+        ProducerRecord<String, Object> record = new ProducerRecord<>("find_user_by_email", email);
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
         SendResult<String, Object> sendResult = sendAndReceive.getSendFuture().get();
         sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findUserByGender(String gender) throws JsonProcessingException, ExecutionException, InterruptedException {
-        ProducerRecord<String, Object> record = new ProducerRecord<>("get_list_users", "");
+        ProducerRecord<String, Object> record = new ProducerRecord<>("find_user_by_gender", "");
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
         SendResult<String, Object> sendResult = sendAndReceive.getSendFuture().get();
         sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));
@@ -117,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findUserByFullName(String fullName) throws JsonProcessingException, ExecutionException, InterruptedException {
-        ProducerRecord<String, Object> record = new ProducerRecord<>("get_list_users", "");
+        ProducerRecord<String, Object> record = new ProducerRecord<>("find_user_by_fullname", "");
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
         SendResult<String, Object> sendResult = sendAndReceive.getSendFuture().get();
         sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));
@@ -131,7 +132,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findUserByDepartment(String department) throws JsonProcessingException, ExecutionException, InterruptedException {
-        ProducerRecord<String, Object> record = new ProducerRecord<>("get_list_users", "");
+        ProducerRecord<String, Object> record = new ProducerRecord<>("find_user_by_department", "");
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
         SendResult<String, Object> sendResult = sendAndReceive.getSendFuture().get();
         sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));
@@ -144,23 +145,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean delete(UserDTO dto) throws ExecutionException, InterruptedException, JsonProcessingException {
-        String jsonDto = objectMapper.writeValueAsString(dto);
-        ProducerRecord<String, Object> record = new ProducerRecord<>("delete_user", jsonDto);
+    public List<UserDTO> delete(String userId) throws ExecutionException, InterruptedException, JsonProcessingException {
+        ProducerRecord<String, Object> record = new ProducerRecord<>("delete_user", userId);
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
         SendResult<String, Object> sendResult = sendAndReceive.getSendFuture().get();
         sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));
         ConsumerRecord<String, Object> consumerRecord = sendAndReceive.get();
 
-        Boolean result = (Boolean) consumerRecord.value();
+        String json = (String) consumerRecord.value();
 
-//        UserDTO userDTO = objectMapper.readValue(json, new TypeReference<UserDTO>(){});
-        return result;
+        List<UserDTO> userDTOList = objectMapper.readValue(json, new TypeReference<List<UserDTO>>(){});
+        return userDTOList;
     }
 
     @Override
     public UserDTO findUserById(String userId) throws JsonProcessingException, ExecutionException, InterruptedException {
-        ProducerRecord<String, Object> record = new ProducerRecord<>("get_list_users", "");
+        ProducerRecord<String, Object> record = new ProducerRecord<>("get_info_user", "");
         RequestReplyFuture<String, Object, Object> sendAndReceive = replyKafkaTemplate.sendAndReceive(record);
         SendResult<String, Object> sendResult = sendAndReceive.getSendFuture().get();
         sendResult.getProducerRecord().headers().forEach(header -> System.out.println(header.key() + ":" + header.value().toString()));

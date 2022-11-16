@@ -1,0 +1,93 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font: 14px/1.4 Georgia, Serif;
+}
+
+#page-wrap {
+	margin: 50px;
+}
+
+p {
+	margin: 20px 0;
+}
+
+
+/*
+	Generic Styling, for Desktops/Laptops
+	*/
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+
+/* Zebra striping */
+
+tr:nth-of-type(odd) {
+	background: #eee;
+}
+
+th {
+	background: #333;
+	color: white;
+	font-weight: bold;
+}
+
+td,
+th {
+	padding: 6px;
+	border: 1px solid #ccc;
+	text-align: left;
+}
+
+
+/* Style the search field */
+
+form.search input[type=text] {
+	padding: 10px;
+	font-size: 17px;
+	border: 1px solid grey;
+	background: #f1f1f1;
+}
+
+
+/* Style the submit button */
+
+form.search button {
+	padding: 10px;
+	background: #2196F3;
+	color: white;
+	font-size: 17px;
+	border: 1px solid grey;
+	border-left: none;
+	/* Prevent double borders */
+	cursor: pointer;
+}
+
+form.search button:hover {
+	background: #0b7dda;
+}
+
+
+/* Clear floats */
+
+form.search::after {
+	content: "";
+	clear: both;
+	display: table;
+}
+
+#field {
+	font-size: 17px;
+	padding: 10px;
+}
+
+.icon {
+	margin-right: 10px;
+	cursor: pointer;
+}

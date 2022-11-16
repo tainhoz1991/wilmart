@@ -1,5 +1,6 @@
 package com.service;
 
+import com.dto.UserBaseDTO;
 import com.dto.UserDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -12,9 +13,9 @@ public interface UserService {
 
     Object test() throws ExecutionException, InterruptedException;
 
-    UserDTO create(UserDTO dto) throws JsonProcessingException, ExecutionException, InterruptedException;
+    List<UserDTO> create(UserBaseDTO dto) throws JsonProcessingException, ExecutionException, InterruptedException;
 
-    UserDTO update(UserDTO dto) throws ExecutionException, InterruptedException, JsonProcessingException;
+    List<UserDTO> update(UserDTO dto) throws ExecutionException, InterruptedException, JsonProcessingException;
 
     List<UserDTO> findUserByEmail(String email) throws JsonProcessingException, ExecutionException, InterruptedException;
 
@@ -24,7 +25,7 @@ public interface UserService {
 
     List<UserDTO> findUserByDepartment(String department) throws JsonProcessingException, ExecutionException, InterruptedException;
 
-    Boolean delete(UserDTO dto) throws ExecutionException, InterruptedException, JsonProcessingException;
+    List<UserDTO> delete(String userId) throws ExecutionException, InterruptedException, JsonProcessingException;
 
     UserDTO findUserById(String userId) throws JsonProcessingException, ExecutionException, InterruptedException;
 }
